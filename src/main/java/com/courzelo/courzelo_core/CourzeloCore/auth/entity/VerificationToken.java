@@ -31,7 +31,7 @@ public class VerificationToken {
     private String token;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, name = "user_id")
+    @JoinColumn(nullable = false, name = "userID")
     private SignUpRequest signUpRequest;
 
     @Column(nullable = false)

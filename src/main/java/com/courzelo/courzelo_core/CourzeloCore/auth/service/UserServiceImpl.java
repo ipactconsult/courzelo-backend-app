@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
 	      verificationTokenRepository.save(verificationToken);
 	      // Construire le message e-mail
 	      String subject = "CourZelo Mail Verification";
-	      String link = "http://localhost:4200/api/auth/verify-email?token=\\"+token ;
+	      String link = "http://localhost:8082/api/auth/verify-email/"+token ;
 	      String text = "<p>Hello,</p>"
 		            + "<p>This process is to verify your Email.</p>"
 		            + "<p>Click the link below to change your password:</p>"
@@ -96,7 +96,7 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public VerificationToken getVerificationToken(String token) {
-        return verificationTokenRepository.findByToken(token);
+		return verificationTokenRepository.findByToken(token);
     }
 
 	@Override
@@ -132,6 +132,11 @@ public class UserServiceImpl implements UserService {
 		//roles.add(Roles);
 		
 		//start create user
+		user.setDisplayName(formDTO.getDisplayName());
+
+		user.setProvider(formDTO.getSocialProvider().getProviderType());
+		user.setEnabled(true);
+		user.setProviderUserId(formDTO.getProviderUserId());
 		
 
 		Set<String> strRoles =  formDTO.getRoles();
@@ -169,18 +174,10 @@ public class UserServiceImpl implements UserService {
 
 
 					break;
-				case "trainee":
-					Role traineeRole = roleRepository.findByName(Role.ROLE_TRAINEE);
-						//	.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-					user.setEmail(formDTO.getEmail());
-					user.setPassword(passwordEncoder.encode(formDTO.getPassword()));
-					roles.add(traineeRole);
-					
-					user.setBusiness(null);
+					//	.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 
 
-					break;
-				case "trainerRole":
+					case "trainerRole":
 					Role trainerRole = roleRepository.findByName(Role.ROLE_TRAINER);
 						//	.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 					user.setEmail(formDTO.getEmail());
@@ -237,13 +234,9 @@ public class UserServiceImpl implements UserService {
 		
 		
 		//end code
-		
-		
-		user.setDisplayName(formDTO.getDisplayName());
+
+
 		user.setRoles(roles);
-		user.setProvider(formDTO.getSocialProvider().getProviderType());
-		user.setEnabled(true);
-		user.setProviderUserId(formDTO.getProviderUserId());
 	
 		return user;
 	}
@@ -251,18 +244,21 @@ public class UserServiceImpl implements UserService {
 	private boolean isEmailDomainAssociatedWithCompany(String email) {
 	    String[] emailParts = email.split("@");
 	    String domain = emailParts[1];
+		boolean verif = true;
 	    
 	    // Liste de noms de domaines connus pour les fournisseurs de messagerie gratuits
 	    String[] freeEmailProviders = {"gmail.com", "hotmail.com", "yahoo.com", "outlook.com", "aol.com", "protonmail.com", "mail.com", "zoho.com", "icloud.com", "yandex.com", "gmx.com", "tutanota.com", "mail.ru", "rediffmail.com", "inbox.com", "hushmail.com", "fastmail.com", "startmail.com", "runbox.com", "lavabit.com"};
 	    
 	    // Vérifier si le nom de domaine appartient à un fournisseur de messagerie gratuit
 	    for (String provider : freeEmailProviders) {
-	        if (domain.equals(provider)) {
-	            return false;
+	        if (domain.equalsIgnoreCase(provider)) {
+	            verif = false;
+				System.out.println(provider+" "+domain);
 	        }
+
 	    }
-	    
-	    return true;
+
+	    return verif;
 	   
 	}
 

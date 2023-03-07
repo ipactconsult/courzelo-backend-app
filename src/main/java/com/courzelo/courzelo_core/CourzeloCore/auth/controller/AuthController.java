@@ -53,8 +53,8 @@ public class AuthController {
 	@Autowired	
 	JavaMailSender mailSender;
 	
-	@GetMapping("verify-email")
-	   public String verifyEmail(@RequestParam("token") String token) {
+	@GetMapping("verify-email/{token}")
+	   public String verifyEmail(@PathVariable("token") String token) {
 	      // Vérifier si le jeton de vérification est valide et actif
 	      VerificationToken verificationToken = userService.getVerificationToken(token);
 	      if (verificationToken == null) {
