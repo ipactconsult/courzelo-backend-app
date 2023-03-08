@@ -397,6 +397,10 @@ public class UserServiceImpl implements UserService {
 	public long addUser(SignUpRequest request) {
 		
 		User user = buildUser(request);
+		Date now = Calendar.getInstance().getTime();
+		user.setId(sequenceGeneratorService.generateSequence(User.SEQUENCE_NAME));
+		user.setCreatedDate(now);
+		user.setModifiedDate(now);
 		userRepository.save(user);
 		return user.getId();
 	}
