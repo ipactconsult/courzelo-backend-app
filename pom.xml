@@ -8,8 +8,8 @@
 		<version>2.6.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.courzelo.courzelo_core</groupId>
-	<artifactId>CourzeloCore</artifactId>
+	<groupId>com.courzelo</groupId>
+	<artifactId>app</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>CourzeloCore</name>
 	<description>Courzelo core management</description>
